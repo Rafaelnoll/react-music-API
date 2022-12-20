@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
 const PORT = 3030;
-const Albums = require("./controllers/Albums");
+const albumsRoute = require("./routes/albumsRoute");
 
-app.get("/", (req, res) => {
-    Albums.getAll()
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error));
-    res.send("ok");
-});
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(albumsRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is on port ${PORT}`);
