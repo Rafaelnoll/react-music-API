@@ -19,7 +19,6 @@ class Albums {
         const albumRef = database.collection("albums").doc(id);
         const albumSnapshot = await albumRef.get();
         const album = albumSnapshot.data();
-        console.log(album);
         return album;
     }
 
