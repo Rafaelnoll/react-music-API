@@ -6,10 +6,21 @@ class Albums {
         const albumsSnapshot = await database.collection("albums").get();
         const albums = [];
         albumsSnapshot.forEach((doc)=>{
-            albums.push(doc.data());
+            albums.push({
+                ...doc.data(),
+                id:doc.id,
+            });
         });
 
         return albums;
+    }
+    
+    static async getById(id) {
+        const albumRef = database.collection("albums").doc(id);
+        const albumSnapshot = await albumRef.get();
+        const album = albumSnapshot.data();
+        console.log(album);
+        return album;
     }
 
 }
