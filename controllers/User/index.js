@@ -9,10 +9,9 @@ class User {
                 password,
             });
 
-            return true;
+            return { isCreated: true, msg: "User created" };
         } catch (error) {
-            console.log(error);
-            return false;
+            return { isCreated: false, msg: error.message };
         }
     }
 

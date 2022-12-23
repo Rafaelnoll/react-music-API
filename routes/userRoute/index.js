@@ -10,21 +10,21 @@ router.post("/user", async (req, res) => {
     const passwordIsValid = validatePassword(password, repeatedPassword);
 
     if (emailIsValid && passwordIsValid) {
-        const isCreated = await User.create(email, password);
+        const userResponse = await User.create(email, password);
 
-        if (isCreated) {
+        if (userResponse.isCreated) {
             res.status(200);
-            res.json({ msg: "User created" });
+            res.json({ error: false, msg: userResponse.msg });
             return;
         }
 
         res.status(500);
-        res.json({ msg: "Server error" });
+        res.json({ error: true, msg: userResponse.msg });
         return;
     }
 
     res.status(400);
-    res.json({ msg: "Email and password have to be passed" });
+    res.json({ error: true, msg: "Email and password have to be passed" });
 });
 
 module.exports = router;
