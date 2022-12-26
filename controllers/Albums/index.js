@@ -14,7 +14,7 @@ class Albums {
 
         return albums;
     }
-    
+
     static async getById(id) {
         const albumRef = database.collection("albums").doc(id);
         const albumSnapshot = await albumRef.get();

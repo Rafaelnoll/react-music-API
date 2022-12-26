@@ -8,6 +8,7 @@ router.get("/albums", async (req, res) => {
         res.json(allAlbums);
     } catch (error) {
         if (error) {
+            console.log(error);
             res.status(500);
             res.json({
                 msg: "Server error!"
