@@ -45,16 +45,36 @@ router.get("/albums/:id", async (req, res) => {
 
 router.post("/collection/album", validate, async (req, res) => {
     const { uid } = req.user;
-    const { trackId } = req.body;
+    const { albumId, name, image, totalOfTracks,artist } = req.body;
+    const albumData = {
+        albumId,
+        name,
+        image,
+        totalOfTracks,
+        artist,
+    }
 
     try {
-        const track = await Albums.addInCollections(uid, trackId);
+        const album = await Albums.addInCollections(uid, albumData);
         res.status(200);
-        res.json({ error: false, track });
+        res.json({ error: false, album });
         return;
     } catch (error) {
         res.status(500);
-        res.json({ error: false, track: null });
+        res.json({ error: true, album: null });
+    }
+});
+
+router.get("/collection/album", validate, async (req, res) => {
+    try {
+        const { uid } = req.user;
+        const albums = await Albums.getAlbumsInCollection(uid);
+        res.status(200);
+        res.json({ error: false, albums });
+        return;
+    } catch (error) {
+        res.status(500);
+        res.json({ error: false, albums: null });
     }
 });
 

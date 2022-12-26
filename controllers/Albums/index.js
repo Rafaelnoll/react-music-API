@@ -22,7 +22,7 @@ class Albums {
         return album;
     }
 
-    static async addInCollections(userUid, trackId) {
+    static async addInCollections(userUid, album) {
         const likedAlbumsSnapshot = await database.collection("likedAlbums").get();
         let likedAlbums = [];
         likedAlbumsSnapshot.forEach((doc) => {
@@ -30,19 +30,40 @@ class Albums {
         });
 
         const filtredAlbums = likedAlbums.filter(element => {
-            return element.userUid == userUid && element.trackId == trackId;
+            return element.userUid === userUid && element.albumId === album.albumId;
         });
-        
-        if(filtredAlbums[0] !== undefined){
-            return;
+
+        if (filtredAlbums[0] !== undefined) {
+            return null;
         }
 
         const likedAlbum = await database.collection("likedAlbums").add({
             userUid,
-            trackId,
+            albumId: album.albumId,
+            name: album.name,
+            image: album.image,
+            totalOfTracks: album.totalOfTracks,
+            artist: album.artist,
         });
 
         return likedAlbum;
+    }
+
+    static async getAlbumsInCollection(userUid) {
+        try {
+            const albumsSnapshot = await database.collection("likedAlbums").get();
+            let userAlbums = [];
+
+            albumsSnapshot.forEach((doc) => {
+                if (doc.data().userUid === userUid) {
+                    userAlbums.push({ ...doc.data() });
+                }
+            });
+
+            return userAlbums;
+        } catch (error) {
+            return null;
+        }
     }
 
 }
