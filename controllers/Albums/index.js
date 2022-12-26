@@ -5,10 +5,10 @@ class Albums {
     static async getAll() {
         const albumsSnapshot = await database.collection("albums").get();
         const albums = [];
-        albumsSnapshot.forEach((doc)=>{
+        albumsSnapshot.forEach((doc) => {
             albums.push({
                 ...doc.data(),
-                id:doc.id,
+                id: doc.id,
             });
         });
 
@@ -20,6 +20,14 @@ class Albums {
         const albumSnapshot = await albumRef.get();
         const album = albumSnapshot.data();
         return album;
+    }
+
+    static async addInCollections(userUid, trackId) {
+        const likedAlbum = await database.collection("likedAlbums").add({
+            trackId,
+            userUid,
+        });
+        return likedAlbum;
     }
 
 }

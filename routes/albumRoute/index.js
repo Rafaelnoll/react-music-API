@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Albums = require("../../controllers/Albums");
+const validate = require("../../middlewares/auth");
 
 router.get("/albums", async (req, res) => {
     try {
@@ -39,6 +40,21 @@ router.get("/albums/:id", async (req, res) => {
                 msg: "Server error"
             });
         }
+    }
+});
+
+router.post("/collection/album", validate, async (req, res) => {
+    const { uid } = req.user;
+    const { trackId } = req.body;
+
+    try {
+        const track = await Albums.addInCollections(uid, trackId);
+        res.status(200);
+        res.json({ error: false, track });
+        return;
+    } catch (error) {
+        res.status(500);
+        res.json({ error: false, track: null });
     }
 });
 
