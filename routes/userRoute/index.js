@@ -27,4 +27,27 @@ router.post("/user", async (req, res) => {
     res.json({ error: true, msg: "Email and password have to be passed" });
 });
 
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    if (email && password) {
+        const userResponse = await User.login(email, password);
+
+        if (userResponse.isLogged) {
+            res.status(200);
+            res.json({ error: false, msg: userResponse.msg, user: userResponse.user });
+            return;
+        }
+
+        res.status(500);
+        res.json({ error: true, msg: userResponse.msg, user: userResponse.user });
+        return;
+    }
+
+    res.status(400);
+    res.json({ error: true, msg: "Email and password have to be passed" });
+});
+
+
+
 module.exports = router;
