@@ -1,5 +1,7 @@
 const { auth } = require("../../database/firebaseConnection");
 const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
+const jwt = require("jsonwebtoken");
+const secret = process.env.TOKENSECRET;
 
 class User {
 
@@ -13,13 +15,17 @@ class User {
         }
     }
 
-    static async login(email, password) {
+    static async authenticate(email, password) {
         try {
-            const user = await signInWithEmailAndPassword(auth, email, password);
+            const { user } = await signInWithEmailAndPassword(auth, email, password);
+            const token = await jwt.sign({
+                email: user.email,
+                uid: user.uid,
+            }, secret);
 
-            return { isLogged: true, msg: "Logged", user };
+            return { isLogged: true, msg: "Logged", userToken: token };
         } catch (error) {
-            return { isLogged: false, msg: "Error on login", user: null };
+            return { isLogged: false, msg: "Error on login", userToken: null };
         }
     }
 

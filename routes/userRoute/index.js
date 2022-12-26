@@ -31,16 +31,16 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (email && password) {
-        const userResponse = await User.login(email, password);
+        const userResponse = await User.authenticate(email, password);
 
         if (userResponse.isLogged) {
             res.status(200);
-            res.json({ error: false, msg: userResponse.msg, user: userResponse.user });
+            res.json({ error: false, msg: userResponse.msg, userToken: userResponse.userToken });
             return;
         }
 
         res.status(500);
-        res.json({ error: true, msg: userResponse.msg, user: userResponse.user });
+        res.json({ error: true, msg: userResponse.msg, userToken: userResponse.userToken });
         return;
     }
 
