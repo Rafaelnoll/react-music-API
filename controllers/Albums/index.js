@@ -23,10 +23,25 @@ class Albums {
     }
 
     static async addInCollections(userUid, trackId) {
-        const likedAlbum = await database.collection("likedAlbums").add({
-            trackId,
-            userUid,
+        const likedAlbumsSnapshot = await database.collection("likedAlbums").get();
+        let likedAlbums = [];
+        likedAlbumsSnapshot.forEach((doc) => {
+            likedAlbums.push({ ...doc.data() });
         });
+
+        const filtredAlbums = likedAlbums.filter(element => {
+            return element.userUid == userUid && element.trackId == trackId;
+        });
+        
+        if(filtredAlbums[0] !== undefined){
+            return;
+        }
+
+        const likedAlbum = await database.collection("likedAlbums").add({
+            userUid,
+            trackId,
+        });
+
         return likedAlbum;
     }
 
