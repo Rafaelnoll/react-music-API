@@ -31,22 +31,28 @@ router.post("/user", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
-    if (email && password) {
-        const userResponse = await User.authenticate(email, password);
-
-        if (userResponse.isLogged) {
-            res.status(200);
-            res.json({ error: false, msg: userResponse.msg, userToken: userResponse.userToken });
+    try{
+        if (email && password) {
+            const userResponse = await User.authenticate(email, password);
+    
+            if (userResponse.isLogged) {
+                res.status(200);
+                res.json({ error: false, msg: userResponse.msg, userToken: userResponse.userToken });
+                return;
+            }
+    
+            res.status(400);
+            res.json({ error: true, msg: userResponse.msg, userToken: userResponse.userToken });
             return;
         }
-
-        res.status(500);
-        res.json({ error: true, msg: userResponse.msg, userToken: userResponse.userToken });
+    
+        res.status(400);
+        res.json({ error: true, msg: "Email and password have to be passed" });
         return;
+    }catch(error){
+        res.status(500);
+        res.json({ error: true, msg: "Server error" });
     }
-
-    res.status(400);
-    res.json({ error: true, msg: "Email and password have to be passed" });
 });
 
 router.get("/user", validate, (req, res) => {

@@ -23,9 +23,9 @@ class User {
                 uid: user.uid,
             }, secret);
 
-            return { isLogged: true, msg: "Logged", userToken: token };
+            return { isLogged: true, msg: "Successfully logged in", userToken: token };
         } catch (error) {
-            return { isLogged: false, msg: "Error on login", userToken: null };
+            return { isLogged: false, msg: "Wrong email or password", userToken: null };
         }
     }
 
