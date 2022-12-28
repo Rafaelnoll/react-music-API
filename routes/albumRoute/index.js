@@ -18,6 +18,21 @@ router.get("/albums", async (req, res) => {
     }
 });
 
+router.get("/topCharts", async (req, res) => {
+    try {
+        const topAlbums = await Albums.getTopAlbums();
+        res.json(topAlbums);
+    } catch (error) {
+        if (error) {
+            console.log(error);
+            res.status(500);
+            res.json({
+                msg: "Server error!"
+            });
+        }
+    }
+});
+
 router.get("/albums/:id", async (req, res) => {
     try {
         const { id } = req.params;

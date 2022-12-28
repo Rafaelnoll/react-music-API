@@ -65,6 +65,18 @@ class Albums {
             return null;
         }
     }
+    
+    static async getTopAlbums() {
+        try {
+            const albums = await this.getAll();
+            const topAlbums = albums.filter((album)=> album.topChart);
+            console.log(topAlbums);
+
+            return topAlbums;
+        } catch (error) {
+            return null;
+        }
+    }
 
 }
 
