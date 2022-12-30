@@ -65,12 +65,26 @@ class Albums {
             return null;
         }
     }
-    
+
+    static async deleteAlbumInCollection(userUid, albumId) {
+        try {
+            const albumRef = database.collection("likedAlbums").where("userUid", "==", userUid).where("albumId", "==", albumId);
+            const albumSnapshot = await albumRef.get();
+            albumSnapshot.forEach(doc => {
+                (async () => {
+                    await database.collection("likedAlbums").doc(doc.id).delete();
+                })()
+            });
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     static async getTopAlbums() {
         try {
             const albums = await this.getAll();
-            const topAlbums = albums.filter((album)=> album.topChart);
-            console.log(topAlbums);
+            const topAlbums = albums.filter((album) => album.topChart);
 
             return topAlbums;
         } catch (error) {

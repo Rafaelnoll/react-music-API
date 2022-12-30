@@ -60,7 +60,7 @@ router.get("/albums/:id", async (req, res) => {
 
 router.post("/collection/album", validate, async (req, res) => {
     const { uid } = req.user;
-    const { albumId, name, image, totalOfTracks,artist } = req.body;
+    const { albumId, name, image, totalOfTracks, artist } = req.body;
     const albumData = {
         albumId,
         name,
@@ -89,7 +89,21 @@ router.get("/collection/album", validate, async (req, res) => {
         return;
     } catch (error) {
         res.status(500);
-        res.json({ error: false, albums: null });
+        res.json({ error: true, albums: null });
+    }
+});
+
+router.delete("/collection/album/:id", validate, async (req, res) => {
+    try {
+        const { uid } = req.user;
+        const { id } = req.params;
+        await Albums.deleteAlbumInCollection(uid, id);
+        res.status(200);
+        res.json({ error: false, msg: "Deleted" });
+        return;
+    } catch (error) {
+        res.status(500);
+        res.json({ error: true, msg: "Server Error!" });
     }
 });
 
